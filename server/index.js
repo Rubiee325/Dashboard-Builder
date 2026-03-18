@@ -27,7 +27,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
+app.get("/", (req, res) => {
+  res.send("🚀 Dashboard Builder API is running!");
+});
 
 // Middleware
 
