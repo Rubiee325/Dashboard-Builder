@@ -8,11 +8,8 @@ import {
   XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell, Legend
 } from "recharts";
-
 const ChartWidget = ({ widget, orders = [] }) => {
-
   const { config } = widget;
-
   const {
     chartType = "",
     xAxis = "Product",
@@ -20,9 +17,7 @@ const ChartWidget = ({ widget, orders = [] }) => {
     color = "#54bd95",
     showLegend = true
   } = config;
-
   const type = (chartType || "").toLowerCase();
-
   const fieldMap = {
     "Customer Name": "firstName",
     "Product": "product",
@@ -32,38 +27,24 @@ const ChartWidget = ({ widget, orders = [] }) => {
     "Status": "status",
     "Created By": "createdBy"
   };
-
   const chartData = useMemo(() => {
-
     if (!orders || orders.length === 0) return [];
-
     const xKey = fieldMap[xAxis] || "product";
     const yKey = fieldMap[yAxis] || "totalAmount";
-
     const grouped = {};
-
     orders.forEach(order => {
-
       let key = order[xKey];
-
       if (xKey === "firstName") {
         key = `${order.firstName || ""} ${order.lastName || ""}`;
       }
-
       if (!key) key = "Unknown";
-
       if (!grouped[key]) {
         grouped[key] = { name: key, value: 0 };
       }
-
       grouped[key].value += Number(order[yKey]) || 0;
-
     });
-
     return Object.values(grouped);
-
   }, [orders, xAxis, yAxis]);
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -75,7 +56,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
     }
     return null;
   };
-
   const colors = [
     color,
     "#6366f1",
@@ -83,8 +63,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
     "#f43f5e",
     "#8b5cf6"
   ];
-
-  /* ✅ FIXED X AXIS */
   const renderXAxis = () => (
     <XAxis
       dataKey="name"
@@ -96,8 +74,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
       }
     />
   );
-
-  /* BAR */
   if (type.includes("bar")) {
     return (
       <div style={{ width: "100%", height: 300 }}>
@@ -113,8 +89,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
       </div>
     );
   }
-
-  /* LINE */
   if (type.includes("line")) {
     return (
       <div style={{ width: "100%", height: 300 }}>
@@ -130,8 +104,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
       </div>
     );
   }
-
-  /* AREA */
   if (type.includes("area")) {
     return (
       <div style={{ width: "100%", height: 300 }}>
@@ -147,8 +119,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
       </div>
     );
   }
-
-  /* PIE */
   if (type.includes("pie")) {
     return (
       <div style={{ width: "100%", height: 300 }}>
@@ -166,15 +136,12 @@ const ChartWidget = ({ widget, orders = [] }) => {
       </div>
     );
   }
-
-  /* SCATTER */
   if (type.includes("scatter")) {
     const scatterData = chartData.map((d, i) => ({
       x: i + 1,
       y: d.value,
       name: d.name
     }));
-
     return (
       <div style={{ width: "100%", height: 300 }}>
         <ResponsiveContainer>
@@ -189,8 +156,6 @@ const ChartWidget = ({ widget, orders = [] }) => {
       </div>
     );
   }
-
   return <div className="text-center py-10">Unsupported chart</div>;
 };
-
 export default ChartWidget;

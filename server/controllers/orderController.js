@@ -65,27 +65,7 @@ const deleteOrder = async (req, res, next) => {
         next(err);
     }
 };
-// exports.createOrder = async (req, res) => {
-//   try {
 
-//     const order = await Order.create(req.body);
-
-//     res.status(201).json({
-//       success: true,
-//       data: order
-//     });
-
-//   } catch (error) {
-
-//     console.error("Create order error:", error);
-
-//     res.status(500).json({
-//       success: false,
-//       message: "Failed to create order"
-//     });
-
-//   }
-// };
 
 module.exports = {
     getAllOrders,

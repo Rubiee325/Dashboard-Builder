@@ -26,8 +26,6 @@ const DashboardView = () => {
 
   const socket = React.useMemo(() => io('http://localhost:5000'), []);
 
-  /* ================= FETCH ================= */
-
   const fetchData = useCallback(async () => {
 
     setLoading(true);
@@ -45,7 +43,6 @@ const DashboardView = () => {
       let orderData =
         ordersRes?.data?.data || ordersRes?.data || [];
 
-      // ✅ DATE FILTER
       const now = new Date();
 
       if (dateRange !== "All time") {
@@ -100,7 +97,6 @@ const DashboardView = () => {
 
   }, [fetchData]);
 
-  /* ================= STATES ================= */
 
   if (loading) {
     return (
@@ -126,37 +122,29 @@ const DashboardView = () => {
       </div>
     );
   }
-
   /* ================= UI ================= */
-
   return (
-
-    <div className={`min-h-screen p-10 ${isDarkMode ? "bg-[#0B1733]" : "bg-[#F7F9FC]"}`}>
-
+    <div id="dashboard-content" className={`min-h-screen p-10 ${isDarkMode ? "bg-[#0B1733]" : "bg-[#F7F9FC]"}`}>
       {/* HEADER */}
       <div className="flex justify-between mb-8">
 
-        <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
+        <h1 className="text-xl md:text-3xl font-bold">Analytics Dashboard</h1>
 
         <div className="flex gap-4">
 
           <button onClick={toggleTheme} className="p-2 rounded-lg bg-white/10">
-  {isDarkMode ? <Sun color="white" size={18}/> : <Moon color="black" size={18}/>}
-</button>
+              {isDarkMode ? <Sun color="white" size={18}/> : <Moon color="black" size={18}/>}
+          </button>
+
+          <button onClick={() => exportToPDF()} className="p-2 rounded-lg bg-white/10">
+                {isDarkMode ? <Download color="white" size={18}/> : <Download color="black" size={18}/>}
+          </button>
 
           <button
-  onClick={() => exportToPDF()}
-  className="p-2 rounded-lg bg-white/10"
->
-  {isDarkMode ? <Download color="white" size={18}/> : <Download color="black" size={18}/>}
-</button>
-
-          <button
-  onClick={() => navigate('/configure')}
-  className="p-2 rounded-lg bg-[#54bd95] text-white flex items-center gap-2"
->
-  <Settings size={16} color="white"/> Configure
-</button>
+            onClick={() => navigate('/configure')}
+            className="p-2 rounded-lg bg-[#54bd95] text-white flex items-center gap-2">
+            <Settings size={16} color="white"/> Configure
+          </button>
 
         </div>
 
@@ -169,36 +157,34 @@ const DashboardView = () => {
 
       {/* ✅ FINAL GRID FIX */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
 
         {config.widgets.map(widget => (
 
-          <div
-            key={widget.id || widget._id}
-            className="bg-white rounded-xl p-5 shadow min-h-[300px]"
-          >
+          <div key={widget.id || widget._id} className="bg-white rounded-xl p-5 shadow min-h-[300px] flex flex-col">
 
             <h3 className="text-sm font-bold mb-3">{widget.title}</h3>
 
-            <div className="h-full">
+            <div className="h-full flex flex-col">
 
               {widget.type === "KPI" && (
-  <KPIWidget widget={widget} orders={orders} />
-)}
+                <KPIWidget widget={widget} orders={orders} />
+              )}
 
-{widget.type === "Table" && (
-  <TableWidget widget={widget} orders={orders} />
-)}
+              {widget.type === "Table" && (
+               <TableWidget widget={widget} orders={orders} />
+              )}
 
-{(
-  widget.type?.toLowerCase().includes("chart") ||
-  widget.type?.toLowerCase().includes("bar") ||
-  widget.type?.toLowerCase().includes("line") ||
-  widget.type?.toLowerCase().includes("area") ||
-  widget.type?.toLowerCase().includes("pie") ||
-  widget.type?.toLowerCase().includes("scatter")
-) && (
-  <ChartWidget widget={widget} orders={orders} />
-)}
+              {(
+             widget.type?.toLowerCase().includes("chart") ||
+             widget.type?.toLowerCase().includes("bar") ||
+             widget.type?.toLowerCase().includes("line") ||
+             widget.type?.toLowerCase().includes("area") ||
+             widget.type?.toLowerCase().includes("pie") ||
+             widget.type?.toLowerCase().includes("scatter")
+             ) && (
+               <ChartWidget widget={widget} orders={orders} />
+            )}
 
             </div>
 

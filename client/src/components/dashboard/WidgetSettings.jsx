@@ -193,15 +193,13 @@ const WidgetSettings = ({ widget, onClose, onUpdate }) => {
                 onChange={handleChange}
               />
               <InputGroup
-  label="Decimal Precision"
-  name="config.precision"
-  type="number"
-  value={formData.config.precision || 0}
-  onChange={handleChange}
-/>
-            </>
-            
-
+                  label="Decimal Precision"
+                  name="config.precision"
+                  type="number"
+                  value={formData.config.precision || 0}
+                  onChange={handleChange}
+              />
+              </>
           )}
 
           {/* CHART SETTINGS */}

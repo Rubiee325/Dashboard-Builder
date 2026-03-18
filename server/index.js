@@ -16,6 +16,7 @@ const io = require('socket.io')(server, {
   cors: { origin: "*", methods: ["GET", "POST"] }
 });
 const authRoutes = require('./routes/authRoutes');
+const auth = require('./middleware/auth');
 
 
 // ✅ CORS MUST BE FIRST

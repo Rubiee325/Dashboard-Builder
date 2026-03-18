@@ -1,10 +1,9 @@
 const Dashboard = require('../models/Dashboard');
-const auth = require('../middleware/auth');
 
 const saveDashboardConfig = async (req, res) => {
   try {
 
-    const userId = req.user.id;
+    const userId = req.user.userId || req.user.id || req.user._id;
 
     let config = await Dashboard.findOne({ userId });
 
@@ -22,79 +21,28 @@ const saveDashboardConfig = async (req, res) => {
     res.json({ success: true, data: config });
 
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };
 
 
-
-
 const getDashboardConfig = async (req, res) => {
   try {
 
-    const userId = req.user.id;
+    const userId = req.user.userId || req.user.id || req.user._id;
 
     const config = await Dashboard.findOne({ userId });
 
     res.json({ success: true, data: config || { widgets: [] } });
 
   } catch (err) {
+    console.error(err);
+    console.log("REQ.USER:", req.user);
+    console.log("REQ.USER IN CONTROLLER:", req.user);
     res.status(500).json({ message: err.message });
   }
 };
-
-// GET
-// const getDashboardConfig = async (req, res) => {
-//   try {
-//     let dashboard = await Dashboard.findOne();
-
-//     if (!dashboard) {
-//       dashboard = new Dashboard({
-//         name: "Main Dashboard",
-//         userId: "default-user",
-//         widgets: []
-//       });
-//       await dashboard.save();
-//     }
-
-//     res.json({ success: true, data: dashboard });
-
-//   } catch (err) {
-//     console.error("GET DASHBOARD ERROR:", err);
-//     res.status(500).json({ message: "Failed to fetch dashboard" });
-//   }
-// };
-
-// POST (SAVE)
-
-// const saveDashboardConfig = async (req, res) => {
-//   try {
-//     console.log("REQ BODY:", req.body);
-//     const { widgets } = req.body;
-
-//     console.log("SAVE PAYLOAD:", widgets); // DEBUG
-
-//     let dashboard = await Dashboard.findOne();
-
-//     if (!dashboard) {
-//       dashboard = new Dashboard({
-//         name: "Main Dashboard",
-//         userId: "default-user",
-//         widgets
-//       });
-//     } else {
-//       dashboard.widgets = widgets;
-//     }
-
-//     await dashboard.save();
-
-//     res.json({ success: true, data: dashboard });
-
-//   } catch (err) {
-//     console.error("SAVE DASHBOARD ERROR:", err);
-//     res.status(500).json({ message: "Save failed" });
-//   }
-// };
 
 module.exports = {
   getDashboardConfig,

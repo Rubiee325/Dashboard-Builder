@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { getOrders } from "../../../services/api";
-
-const TableWidget = ({ widget, drillDownFilter }) => {
-
+import React from "react";
+const TableWidget = ({ widget, orders = [], drillDownFilter }) => {
   const { config } = widget;
-
   const {
     columns = [],
     sortBy = "Order Date",
@@ -12,23 +8,8 @@ const TableWidget = ({ widget, drillDownFilter }) => {
     fontSize = 14,
     headerBg = "#54bd95"
   } = config;
-
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const res = await getOrders();
-        setOrders(res.data?.data || []);
-      } catch (err) {
-        console.error("Orders load failed", err);
-      }
-    };
-    loadOrders();
-  }, []);
-
   const fieldMap = {
-    "Customer Name": ["firstName","lastName"],
+    "Customer Name": ["firstName", "lastName"],
     "Email ID": "email",
     "Phone Number": "phone",
     "Product": "product",
@@ -39,9 +20,7 @@ const TableWidget = ({ widget, drillDownFilter }) => {
     "Created By": "createdBy",
     "Order Date": "createdAt"
   };
-
   let data = [...orders];
-
   if (drillDownFilter) {
     data = data.filter(
       (o) =>
@@ -50,33 +29,22 @@ const TableWidget = ({ widget, drillDownFilter }) => {
         o.createdBy === drillDownFilter
     );
   }
-
   data.sort((a, b) => {
     if (sortBy === "Order Date") {
       return new Date(b.createdAt) - new Date(a.createdAt);
     }
     if (sortBy === "Ascending") {
-      return a.totalAmount - b.totalAmount;
+      return (a.totalAmount || 0) - (b.totalAmount || 0);
     }
     if (sortBy === "Descending") {
-      return b.totalAmount - a.totalAmount;
+      return (b.totalAmount || 0) - (a.totalAmount || 0);
     }
     return 0;
   });
-
   const displayData = data.slice(0, Number(pagination));
-
   return (
-
-    <div
-      style={{ fontSize }}
-      // className="w-full max-h-[250px] overflow-auto border rounded-xl"
-      className="w-full overflow-auto"
-    >
-
+    <div style={{ fontSize }} className="w-full overflow-auto">
       <table className="w-full border-collapse">
-
-        {/* HEADER */}
         <thead className="sticky top-0 z-10">
           <tr style={{ background: headerBg }}>
             {columns.map((col) => (
@@ -89,8 +57,6 @@ const TableWidget = ({ widget, drillDownFilter }) => {
             ))}
           </tr>
         </thead>
-
-        {/* BODY */}
         <tbody>
 
           {displayData.map((row, i) => (
