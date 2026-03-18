@@ -19,6 +19,27 @@ A dynamic dashboard builder application where users can create customizable dash
 - MongoDB
 
 ## Run Project
-```bash
+
+### 1. Clone the repository
+git clone https://github.com/Rubiee325/Dashboard-Builder.git
+cd Dashboard-Builder
+
+---
+
+### 2. Run Backend
+cd server
 npm install
-npm start
+npm run dev   # or npm start
+
+Backend runs on:
+http://localhost:5000
+
+---
+
+### 3. Run Frontend
+cd client
+npm install
+npm run dev
+
+Frontend runs on:
+http://localhost:5173
