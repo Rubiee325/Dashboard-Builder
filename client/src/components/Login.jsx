@@ -22,36 +22,32 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
+  setError("");
 
-    setError("");
+  if (!form.email || !form.password) {
+    return setError("Please enter email and password");
+  }
 
-    // 🔴 Validation
-    if (!form.email || !form.password) {
-      return setError("Please enter email and password");
-    }
+  try {
+    setLoading(true);
 
-    try {
-      setLoading(true);
+    const res = await login(form);
 
-      const res = await login(form);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+    // ✅ Save token
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // ✅ Save token
+    console.log("TOKEN:", res.data.token); // debug
 
+    // ✅ FORCE NAVIGATION
+    window.location.href = "/dashboard";
 
-      // ✅ Go to dashboard
-      navigate("/dashboard");
-
-    } catch (err) {
-      setError(
-        err.response?.data?.message || "Invalid email or password"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  } catch (err) {
+    setError(err.response?.data?.message || "Invalid email or password");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="flex items-center justify-center h-screen bg-[#F8FAFC]">
 
