@@ -21,8 +21,10 @@ const auth = require('./middleware/auth');
 
 // ✅ CORS MUST BE FIRST
 app.use(cors({
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: [
+    "http://localhost:5173",
+    "https://dashboard-builder-eight.vercel.app"
+  ],
   credentials: true
 }));
 
