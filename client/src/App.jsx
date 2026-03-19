@@ -1,5 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
 import { ThemeProvider } from "./context/ThemeContext";
 import Layout from "./components/layout/Layout";
 
@@ -8,48 +9,56 @@ import Signup from "./components/Signup";
 import DashboardView from "./components/dashboard/DashboardView";
 import ConfigCanvas from "./components/dashboard/ConfigCanvas";
 import OrderList from "./components/orders/OrderList";
+const isAuthenticated = () => {
+  return localStorage.getItem("token");
+};
 
-// function App() {
-//   return (
-//     <ThemeProvider>   {/* ✅ MUST WRAP HERE */}
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/login" element={<Login />} />
-//         <Route path="/signup" element={<Signup />} />
-//         <Route path="/dashboard" element={<DashboardView />} />
-//         <Route path="/configure" element={<ConfigCanvas />} />
-//         <Route path="/orders" element={<OrderList />} />
-//       </Routes>
-//     </ThemeProvider>
-//   );
-// }
 
-// export default App;
 
 
 function App() {
   return (
-    <Routes>
+  <Routes>
 
-      {/* Public */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+    {/* Public */}
+    <Route path="/login" element={<Login />} />
+    <Route path="/signup" element={<Signup />} />
 
-      {/* Layout Wrapper */}
-      <Route path="/" element={<Layout />}>
+    {/* Root Redirect */}
+    <Route
+      path="/"
+      element={
+        localStorage.getItem("token")
+          ? <Navigate to="/dashboard" />
+          : <Navigate to="/login" />
+      }
+    />
 
-        {/* Default page */}
-        <Route index element={<DashboardView />} />
+    {/* Layout Wrapper (Protected) */}
+    <Route
+      path="/"
+      element={
+        localStorage.getItem("token")
+          ? <Layout />
+          : <Navigate to="/login" />
+      }
+    >
 
-        {/* Pages inside layout */}
-        <Route path="dashboard" element={<DashboardView />} />
-        <Route path="orders" element={<OrderList />} />
-        <Route path="configure" element={<ConfigCanvas />} />
+      {/* Default page */}
+      <Route index element={<DashboardView />} />
 
-      </Route>
+      {/* Pages inside layout */}
+      <Route path="dashboard" element={<DashboardView />} />
+      <Route path="orders" element={<OrderList />} />
+      <Route path="configure" element={<ConfigCanvas />} />
 
-    </Routes>
-  );
+    </Route>
+
+    {/* Fallback (IMPORTANT for Vercel) */}
+    <Route path="*" element={<Navigate to="/" />} />
+
+  </Routes>
+);
 }
 
 export default App;

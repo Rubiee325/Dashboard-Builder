@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import { getDashboardConfig, getOrders } from '../../services/api';
 import { Settings, Download, Moon, Sun } from 'lucide-react';
 
+
 import KPIWidget from './widgets/KPIWidget';
 import ChartWidget from './widgets/ChartWidget';
 import TableWidget from './widgets/TableWidget';
@@ -83,20 +84,27 @@ const DashboardView = () => {
 
   useEffect(() => {
 
-    fetchData();
+  // ✅ CHECK TOKEN FIRST
+  const token = localStorage.getItem("token");
 
-    socket.on('order_added', fetchData);
-    socket.on('order_updated', fetchData);
-    socket.on('order_deleted', fetchData);
+  if (!token) {
+    navigate("/login");
+    return;
+  }
 
-    return () => {
-      socket.off('order_added');
-      socket.off('order_updated');
-      socket.off('order_deleted');
-    };
+  fetchData();
 
-  }, [fetchData]);
+  socket.on('order_added', fetchData);
+  socket.on('order_updated', fetchData);
+  socket.on('order_deleted', fetchData);
 
+  return () => {
+    socket.off('order_added');
+    socket.off('order_updated');
+    socket.off('order_deleted');
+  };
+
+}, [fetchData, navigate]);
 
   if (loading) {
     return (
