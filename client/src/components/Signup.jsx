@@ -59,7 +59,7 @@ const Signup = () => {
 
         {/* 🔥 APP NAME */}
         <h1 className="text-xl font-black text-center text-[#54bd95] mb-1">
-          Analytics Studio
+         Dashboard Builder
         </h1>
 
         {/* 🔥 TAGLINE */}
