@@ -22,97 +22,102 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-  setError("");
+    setError("");
 
-  if (!form.email || !form.password) {
-    return setError("Please enter email and password");
-  }
+    if (!form.email || !form.password) {
+      return setError("Please enter email and password");
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const res = await login(form);
+      const res = await login(form);
 
-    // ✅ Save token
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-    console.log("TOKEN:", res.data.token); // debug
+      window.location.href = "/dashboard";
 
-    // ✅ FORCE NAVIGATION
-    window.location.href = "/dashboard";
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  } catch (err) {
-    setError(err.response?.data?.message || "Invalid email or password");
-  } finally {
-    setLoading(false);
-  }
-};
   return (
     <div className="flex items-center justify-center h-screen bg-[#F8FAFC]">
 
-  <form
-    onSubmit={(e) => {
-      e.preventDefault();
-      handleLogin();
-    }}
-    className="bg-white p-8 rounded-2xl shadow-xl w-96"
-  >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+        className="bg-white p-8 rounded-2xl shadow-xl w-96"
+      >
 
-    {/* TITLE */}
-    <h2 className="text-2xl font-bold text-center mb-6 text-[#0F172A]">
-      Welcome Back
-    </h2>
+        {/* 🔥 APP NAME */}
+        <h1 className="text-xl font-black text-center text-[#54bd95] mb-1">
+          Analytics Studio
+        </h1>
 
-    {/* ERROR */}
-    {error && (
-      <p className="text-red-500 text-sm mb-3 text-center">
-        {error}
-      </p>
-    )}
+        {/* 🔥 TAGLINE */}
+        <p className="text-xs text-gray-400 text-center mb-4">
+          Build your custom analytics dashboard
+        </p>
 
-    {/* EMAIL */}
-    <input
-      type="email"
-      name="email"
-      placeholder="Email"
-      value={form.email}
-      onChange={handleChange}
-      className="w-full mb-3 px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#54bd95]"
-    />
+        {/* TITLE */}
+        <h2 className="text-2xl font-bold text-center mb-6 text-[#0F172A]">
+          Welcome Back
+        </h2>
 
-    {/* PASSWORD */}
-    <input
-      type="password"
-      name="password"
-      placeholder="Password"
-      value={form.password}
-      onChange={handleChange}
-      className="w-full mb-4 px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#54bd95]"
-    />
+        {/* ERROR */}
+        {error && (
+          <p className="text-red-500 text-sm mb-3 text-center">
+            {error}
+          </p>
+        )}
 
-    {/* BUTTON */}
-    <button
-      type="submit"   // ✅ IMPORTANT CHANGE
-      disabled={loading}
-      className="w-full bg-[#54bd95] text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
-    >
-      {loading ? "Logging in..." : "Login"}
-      
-    </button>
-    
+        {/* EMAIL */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          className="w-full mb-3 px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#54bd95]"
+        />
 
-    {/* SIGNUP */}
-    <p className="text-sm text-center mt-4">
-      Don’t have an account?{" "}
-      <Link to="/signup" className="text-[#54bd95] font-semibold">
-        Sign Up
-      </Link>
-    </p>
+        {/* PASSWORD */}
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          className="w-full mb-4 px-3 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#54bd95]"
+        />
 
-  </form>
+        {/* BUTTON */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-[#54bd95] text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-</div>
+        {/* SIGNUP */}
+        <p className="text-sm text-center mt-4">
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-[#54bd95] font-semibold">
+            Sign Up
+          </Link>
+        </p>
+
+      </form>
+
+    </div>
   );
 };
 
