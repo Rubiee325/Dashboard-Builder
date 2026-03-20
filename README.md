@@ -43,3 +43,10 @@ npm run dev
 
 Frontend runs on:
 http://localhost:5173
+
+## 🎬 Demo Video
+
+▶️ Click below to watch the demo:
+
+[Watch Demo] : https://drive.google.com/file/d/1OQf-bLiOQE7ERh2G_SSb264FZdr9Ro0t/view?usp=sharing
+> 🔊 Note: Please ensure volume is enabled. If audio is not audible in preview, kindly download the video for best experience.
